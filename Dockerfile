@@ -10,11 +10,13 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
-FROM openjdk:21-jdk AS runner
+# Use Temurin 21 JRE for a smaller, official image
+FROM eclipse-temurin:21-jre AS runner
 
 WORKDIR /app
 
-COPY --from=builder ./app/target/billing-service-0.0.1-SNAPSHOT.jar ./app.jar
+# Ensure the source path matches your WORKDIR in the builder stage
+COPY --from=builder /app/target/billing-service-0.0.1-SNAPSHOT.jar ./app.jar
 
 EXPOSE 4001
 EXPOSE 9001
